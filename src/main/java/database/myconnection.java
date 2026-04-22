@@ -14,9 +14,9 @@ public class myconnection {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			// Thông tin kết nối đến CSDL
-			String url = "jdbc:mysql://localhost:3307/quanlyhoso";
+			String url = "jdbc:mysql://localhost:3306/quanlyhoso";
 			String username = "root";
-			String password = "";
+			String password = "Trunghieu66@";
 
 			// Tạo kết nối
 			conn = DriverManager.getConnection(url, username, password);
