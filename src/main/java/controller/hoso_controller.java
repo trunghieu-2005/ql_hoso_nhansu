@@ -152,7 +152,7 @@ public class hoso_controller {
     }
 
     public void onTimKiemClicked() {
-        String keyword = view.getTuKhoaTimKiem();
+        String keyword = view.getTuKhoaTimKiem().trim();
         Integer khoaId = view.getTimKhoaId();
         Integer nganhId = view.getTimNganhId();
         String gioiTinh = view.getTimGioiTinh();
@@ -164,10 +164,14 @@ public class hoso_controller {
             return;
         }
 
-        List<hoso_model> result = service.searchAdvanced(keyword, khoaId, nganhId, gioiTinh, trinhDo, chucVu);
-        view.setTableData(result);
-        if (result.isEmpty()) {
-            showMessage("Không tìm thấy hồ sơ phù hợp.");
+        try {
+            List<hoso_model> result = service.searchAdvanced(keyword, khoaId, nganhId, gioiTinh, trinhDo, chucVu);
+            view.setTableData(result);
+            if (result.isEmpty()) {
+                showMessage("Không tìm thấy hồ sơ phù hợp.");
+            }
+        } catch (RuntimeException ex) {
+            showMessage("Tìm kiếm thất bại: " + getErrorMessage(ex));
         }
     }
 
@@ -240,8 +244,8 @@ public class hoso_controller {
             return false;
         }
 
-        if (!gioiTinh.isBlank() && gioiTinh.length() > 10) {
-            showMessage("Giới tính tối đa 10 ký tự.");
+        if (!isAllowedGioiTinh(gioiTinh)) {
+            showMessage("Giới tính chỉ được chọn Nam hoặc Nữ.");
             return false;
         }
 
@@ -302,6 +306,14 @@ public class hoso_controller {
         }
     }
 
+    private boolean isAllowedGioiTinh(String value) {
+        if (value == null) {
+            return false;
+        }
+        String normalized = value.trim();
+        return "Nam".equalsIgnoreCase(normalized) || "Nữ".equalsIgnoreCase(normalized);
+    }
+
     private void refreshTable() {
         List<hoso_model> list = service.findAll();
         view.setTableData(list);
@@ -312,11 +324,15 @@ public class hoso_controller {
     }
 
     private Integer parseInteger(String value) {
-        if (value == null || value.trim().isEmpty()) {
+        if (value == null) {
+            return null;
+        }
+        String normalized = value.trim();
+        if (normalized.isEmpty()) {
             return null;
         }
         try {
-            return Integer.parseInt(value.trim());
+            return Integer.valueOf(normalized);
         } catch (NumberFormatException ex) {
             return null;
         }

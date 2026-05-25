@@ -143,7 +143,7 @@ add(root);
 		txtId.setFocusable(false);
 		txtId.setRequestFocusEnabled(false);
 		txtTenKhoa = new JTextField();
-		txtMoTa = new JTextArea(3, 20);
+		txtMoTa = new JTextArea(2, 20);
 		txtMoTa.setLineWrap(true);
 		txtMoTa.setWrapStyleWord(true);
 		UiKit.styleTextField(txtId);
@@ -156,7 +156,9 @@ add(root);
 		formGrid.add(lblTenKhoa);
 		formGrid.add(txtTenKhoa);
 		formGrid.add(lblMoTa);
-		formGrid.add(new JScrollPane(txtMoTa));
+		JScrollPane moTaScrollPane = new JScrollPane(txtMoTa);
+		moTaScrollPane.setPreferredSize(new Dimension(0, 42));
+		formGrid.add(moTaScrollPane);
 
 		panel.add(formGrid, BorderLayout.CENTER);
 
@@ -190,7 +192,7 @@ add(root);
 
 		JScrollPane scrollPane = new JScrollPane(tblKhoa);
 		scrollPane.setBorder(BorderFactory.createLineBorder(BORDER));
-		scrollPane.setPreferredSize(new Dimension(800, 280));
+		scrollPane.setPreferredSize(new Dimension(800, 380));
 		panel.add(scrollPane, BorderLayout.CENTER);
 		return panel;
 	}

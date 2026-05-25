@@ -1,15 +1,40 @@
 package view;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.List;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
 import controller.user_controller;
 import model.user_model;
 import view.ui.UiKit;
-
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.table.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.List;
 
 public class user_view extends JPanel {
 
@@ -311,7 +336,7 @@ public class user_view extends JPanel {
     }
 
     private JComboBox<String> createRoleCombo() {
-        return new JComboBox<>(new String[]{"Quản trị viên", "Cán bộ nhân sự", "Cán bộ nhân viên"});
+        return new JComboBox<>(new String[]{"Quản trị viên", "Cán bộ nhân sự"});
     }
 
     private String getRoleKey(String display) {
@@ -336,8 +361,8 @@ public class user_view extends JPanel {
 
     private String getRoleDescription(String role) {
         switch (role) {
-            case "admin":           return "Toàn quyền: Quản lý user, Khoa, Ngành, Hồ sơ";
-            case "can_bo_nhan_su":  return "Quản lý Khoa, Ngành, Hồ sơ; Xem hồ sơ cá nhân";
+            case "admin":           return "Quản lý user, Khoa, Ngành";
+            case "can_bo_nhan_su":  return "Quản lý Khoa, Ngành,Xem hồ sơ cá nhân";
             case "can_bo_nhan_vien":return "Chỉ xem hồ sơ cá nhân";
             default:                return "Không xác định";
         }

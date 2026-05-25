@@ -131,7 +131,7 @@ public class nganh_view extends JPanel {
 
         cboKhoa = new JComboBox<>();
 
-        txtMoTa = new JTextArea(3, 20);
+        txtMoTa = new JTextArea(2, 20);
         txtMoTa.setLineWrap(true);
         txtMoTa.setWrapStyleWord(true);
 
@@ -148,7 +148,9 @@ public class nganh_view extends JPanel {
         formGrid.add(lblKhoa);
         formGrid.add(cboKhoa);
         formGrid.add(lblMoTa);
-        formGrid.add(new JScrollPane(txtMoTa));
+        JScrollPane moTaScrollPane = new JScrollPane(txtMoTa);
+        moTaScrollPane.setPreferredSize(new Dimension(0, 42));
+        formGrid.add(moTaScrollPane);
 
         panel.add(formGrid, BorderLayout.CENTER);
 
@@ -205,7 +207,7 @@ public class nganh_view extends JPanel {
 
         JScrollPane scrollPane = new JScrollPane(tblNganh);
         scrollPane.setBorder(BorderFactory.createLineBorder(BORDER));
-        scrollPane.setPreferredSize(new Dimension(800, 280));
+        scrollPane.setPreferredSize(new Dimension(800, 380));
         panel.add(scrollPane, BorderLayout.CENTER);
 
         return panel;

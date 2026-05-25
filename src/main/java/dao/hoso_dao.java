@@ -1,8 +1,5 @@
 package dao;
 
-import database.myconnection;
-import model.hoso_model;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +8,9 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+
+import database.myconnection;
+import model.hoso_model;
 
 public class hoso_dao {
 
@@ -112,6 +112,103 @@ public class hoso_dao {
         } catch (SQLException e) {
             throw new RuntimeException("Loi khi xoa ho so", e);
         }
+    }
+
+    public List<hoso_model> searchAdvanced(String keyword, Integer khoaId, Integer nganhId,
+                                           String gioiTinh, String trinhDo, String chucVu) {
+        StringBuilder sql = new StringBuilder(
+                "SELECT id, ho_ten, ngay_sinh, gioi_tinh, so_dien_thoai, email, dia_chi, khoa_id, nganh_id, trinh_do, chuc_vu " +
+                "FROM hosonhansu WHERE 1=1"
+        );
+        List<Object> params = new ArrayList<>();
+
+        if (hasText(keyword)) {
+            String pattern = "%" + keyword.trim() + "%";
+            sql.append(" AND (")
+               .append("CAST(id AS CHAR) LIKE ? OR ")
+               .append("ho_ten LIKE ? OR ")
+               .append("ngay_sinh LIKE ? OR ")
+               .append("gioi_tinh LIKE ? OR ")
+               .append("so_dien_thoai LIKE ? OR ")
+               .append("email LIKE ? OR ")
+               .append("dia_chi LIKE ? OR ")
+               .append("CAST(khoa_id AS CHAR) LIKE ? OR ")
+               .append("CAST(nganh_id AS CHAR) LIKE ? OR ")
+               .append("trinh_do LIKE ? OR ")
+               .append("chuc_vu LIKE ?")
+               .append(")");
+
+            for (int i = 0; i < 11; i++) {
+                params.add(pattern);
+            }
+        }
+
+        if (khoaId != null) {
+            sql.append(" AND khoa_id = ?");
+            params.add(khoaId);
+        }
+
+        if (nganhId != null) {
+            sql.append(" AND nganh_id = ?");
+            params.add(nganhId);
+        }
+
+        if (hasText(gioiTinh)) {
+            sql.append(" AND gioi_tinh LIKE ?");
+            params.add("%" + gioiTinh.trim() + "%");
+        }
+
+        if (hasText(trinhDo)) {
+            sql.append(" AND trinh_do LIKE ?");
+            params.add("%" + trinhDo.trim() + "%");
+        }
+
+        if (hasText(chucVu)) {
+            sql.append(" AND chuc_vu LIKE ?");
+            params.add("%" + chucVu.trim() + "%");
+        }
+
+        sql.append(" ORDER BY id");
+
+        List<hoso_model> result = new ArrayList<>();
+        try (Connection conn = myconnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            int index = 1;
+            for (Object param : params) {
+                if (param instanceof Integer intValue) {
+                    ps.setInt(index++, intValue);
+                } else {
+                    ps.setString(index++, String.valueOf(param));
+                }
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    result.add(new hoso_model(
+                            rs.getInt("id"),
+                            rs.getString("ho_ten"),
+                            rs.getString("ngay_sinh"),
+                            rs.getString("gioi_tinh"),
+                            rs.getString("so_dien_thoai"),
+                            rs.getString("email"),
+                            rs.getString("dia_chi"),
+                            getNullableInt(rs, "khoa_id"),
+                            getNullableInt(rs, "nganh_id"),
+                            rs.getString("trinh_do"),
+                            rs.getString("chuc_vu")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Loi khi tim kiem ho so", e);
+        }
+
+        return result;
+    }
+
+    private boolean hasText(String value) {
+        return value != null && !value.trim().isEmpty();
     }
 
     private Integer getNullableInt(ResultSet rs, String column) throws SQLException {

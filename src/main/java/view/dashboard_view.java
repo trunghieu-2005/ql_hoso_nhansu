@@ -1,15 +1,36 @@
 package view;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
+
 import app.SessionManager;
 import controller.auth_controller;
 import controller.user_controller;
 import model.user_model;
 import view.ui.UiKit;
-
-import javax.swing.*;
-import javax.swing.border.*;
-import java.awt.*;
-import java.awt.event.*;
 
 public class dashboard_view extends JFrame {
 
@@ -158,7 +179,7 @@ public class dashboard_view extends JFrame {
             new EmptyBorder(28, 36, 28, 36)
         ));
 
-        JLabel ico  = new JLabel("Trung tâm điều phối", SwingConstants.CENTER);
+        JLabel ico  = new JLabel("Hệ thống quản lý", SwingConstants.CENTER);
         ico.setOpaque(true);
         ico.setBorder(new EmptyBorder(10, 12, 10, 12));
         ico.setBackground(new Color(235, 244, 254));
@@ -188,7 +209,7 @@ public class dashboard_view extends JFrame {
     }
 
     private String getPermissionSummary() {
-        if (session.isAdmin()) return "Bạn có toàn quyền: Tài khoản, Khoa, Ngành và Hồ sơ.";
+        if (session.isAdmin()) return "Bạn có toàn quyền: Tài khoản, Khoa, Ngành .";
         if (session.isCanBoNhanSu()) return "Bạn có quyền quản lý Khoa, Ngành và Hồ sơ nhân sự.";
         return "Bạn có quyền xem hồ sơ cá nhân của mình.";
     }

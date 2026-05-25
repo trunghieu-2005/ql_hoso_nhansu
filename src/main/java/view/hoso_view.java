@@ -44,7 +44,7 @@ public class hoso_view extends JPanel {
     private JTextField txtId;
     private JTextField txtHoTen;
     private JTextField txtNgaySinh;
-    private JTextField txtGioiTinh;
+    private JComboBox<String> cboGioiTinh;
     private JTextField txtSoDienThoai;
     private JTextField txtEmail;
     private JTextField txtDiaChi;
@@ -93,7 +93,12 @@ public class hoso_view extends JPanel {
         root.setBorder(new EmptyBorder(14, 14, 14, 14));
 
         root.add(buildHeader(), BorderLayout.NORTH);
-        root.add(buildContent(), BorderLayout.CENTER);
+        JScrollPane contentScrollPane = new JScrollPane(buildContent());
+        contentScrollPane.setBorder(null);
+        contentScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        contentScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        root.add(contentScrollPane, BorderLayout.CENTER);
+        root.add(buildButtonPanel(), BorderLayout.SOUTH);
         add(root, BorderLayout.CENTER);
 
         bindActions();
@@ -128,7 +133,6 @@ public class hoso_view extends JPanel {
 
         card.add(buildFormAndSearchPanel(), BorderLayout.NORTH);
         card.add(buildTablePanel(), BorderLayout.CENTER);
-        card.add(buildButtonPanel(), BorderLayout.SOUTH);
 
         panel.add(card, BorderLayout.CENTER);
         return panel;
@@ -158,7 +162,7 @@ public class hoso_view extends JPanel {
 
         txtHoTen = new JTextField();
         txtNgaySinh = new JTextField();
-        txtGioiTinh = new JTextField();
+        cboGioiTinh = new JComboBox<>(new String[]{"Nam", "Nữ"});
         txtSoDienThoai = new JTextField();
         txtEmail = new JTextField();
         txtDiaChi = new JTextField();
@@ -171,7 +175,7 @@ public class hoso_view extends JPanel {
         txtId.setEditable(false);
         UiKit.styleTextField(txtHoTen);
         UiKit.styleTextField(txtNgaySinh);
-        UiKit.styleTextField(txtGioiTinh);
+        UiKit.styleComboBox(cboGioiTinh);
         UiKit.styleTextField(txtSoDienThoai);
         UiKit.styleTextField(txtEmail);
         UiKit.styleTextField(txtDiaChi);
@@ -188,7 +192,7 @@ public class hoso_view extends JPanel {
         form.add(new JLabel("Ngày sinh (yyyy-MM-dd)"));
         form.add(txtNgaySinh);
         form.add(new JLabel("Giới tính"));
-        form.add(txtGioiTinh);
+        form.add(cboGioiTinh);
 
         form.add(new JLabel("Số điện thoại"));
         form.add(txtSoDienThoai);
@@ -351,6 +355,9 @@ public class hoso_view extends JPanel {
         txtTimKiem.addActionListener(e -> runControllerAction(() -> controller.onTimKiemClicked()));
         txtTimTrinhDo.addActionListener(e -> runControllerAction(() -> controller.onTimKiemClicked()));
         txtTimChucVu.addActionListener(e -> runControllerAction(() -> controller.onTimKiemClicked()));
+        cboTimKhoa.addActionListener(e -> runControllerAction(() -> controller.onTimKiemClicked()));
+        cboTimNganh.addActionListener(e -> runControllerAction(() -> controller.onTimKiemClicked()));
+        cboTimGioiTinh.addActionListener(e -> runControllerAction(() -> controller.onTimKiemClicked()));
     }
 
     private void runControllerAction(Runnable action) {
@@ -438,7 +445,8 @@ public class hoso_view extends JPanel {
     }
 
     public String getGioiTinhText() {
-        return txtGioiTinh.getText() == null ? "" : txtGioiTinh.getText().trim();
+        String selected = (String) cboGioiTinh.getSelectedItem();
+        return selected == null ? "" : selected.trim();
     }
 
     public String getSoDienThoaiText() {
@@ -534,7 +542,9 @@ public class hoso_view extends JPanel {
         txtId.setText("");
         txtHoTen.setText("");
         txtNgaySinh.setText("");
-        txtGioiTinh.setText("");
+        if (cboGioiTinh.getItemCount() > 0) {
+            cboGioiTinh.setSelectedIndex(0);
+        }
         txtSoDienThoai.setText("");
         txtEmail.setText("");
         txtDiaChi.setText("");
@@ -576,7 +586,12 @@ public class hoso_view extends JPanel {
         txtId.setText(safeValue(item.getId()));
         txtHoTen.setText(safeValue(item.getHoTen()));
         txtNgaySinh.setText(safeValue(item.getNgaySinh()));
-        txtGioiTinh.setText(safeValue(item.getGioiTinh()));
+        String gioiTinh = safeValue(item.getGioiTinh());
+        if ("Nữ".equalsIgnoreCase(gioiTinh)) {
+            cboGioiTinh.setSelectedItem("Nữ");
+        } else {
+            cboGioiTinh.setSelectedItem("Nam");
+        }
         txtSoDienThoai.setText(safeValue(item.getSoDienThoai()));
         txtEmail.setText(safeValue(item.getEmail()));
         txtDiaChi.setText(safeValue(item.getDiaChi()));

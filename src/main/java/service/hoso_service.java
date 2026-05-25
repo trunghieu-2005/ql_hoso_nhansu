@@ -1,10 +1,9 @@
 package service;
 
+import java.util.List;
+
 import dao.hoso_dao;
 import model.hoso_model;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class hoso_service {
     private final hoso_dao dao;
@@ -61,74 +60,7 @@ public class hoso_service {
 
     public List<hoso_model> searchAdvanced(String keyword, Integer khoaId, Integer nganhId,
                                            String gioiTinh, String trinhDo, String chucVu) {
-        String key = normalize(keyword);
-        String gioiTinhFilter = normalize(gioiTinh);
-        String trinhDoFilter = normalize(trinhDo);
-        String chucVuFilter = normalize(chucVu);
-
-        List<hoso_model> result = new ArrayList<>();
-        for (hoso_model item : findAll()) {
-            if (!matchesKeyword(item, key)) {
-                continue;
-            }
-
-            if (khoaId != null && !khoaId.equals(item.getKhoaId())) {
-                continue;
-            }
-
-            if (nganhId != null && !nganhId.equals(item.getNganhId())) {
-                continue;
-            }
-
-            if (!gioiTinhFilter.isBlank() && !containsText(item.getGioiTinh(), gioiTinhFilter)) {
-                continue;
-            }
-
-            if (!trinhDoFilter.isBlank() && !containsText(item.getTrinhDo(), trinhDoFilter)) {
-                continue;
-            }
-
-            if (!chucVuFilter.isBlank() && !containsText(item.getChucVu(), chucVuFilter)) {
-                continue;
-            }
-
-            result.add(item);
-        }
-        return result;
-    }
-
-    private boolean matchesKeyword(hoso_model item, String key) {
-        if (key.isBlank()) {
-            return true;
-        }
-
-        String idText = item.getId() == null ? "" : String.valueOf(item.getId());
-        String khoa = item.getKhoaId() == null ? "" : String.valueOf(item.getKhoaId());
-        String nganh = item.getNganhId() == null ? "" : String.valueOf(item.getNganhId());
-
-        return containsText(idText, key)
-                || containsText(item.getHoTen(), key)
-                || containsText(item.getSoDienThoai(), key)
-                || containsText(item.getEmail(), key)
-                || containsText(item.getDiaChi(), key)
-                || containsText(item.getTrinhDo(), key)
-                || containsText(item.getChucVu(), key)
-                || containsText(khoa, key)
-                || containsText(nganh, key);
-    }
-
-    private boolean containsText(String source, String keyword) {
-        if (source == null || keyword == null) {
-            return false;
-        }
-        return source.toLowerCase().contains(keyword);
-    }
-
-    private String normalize(String value) {
-        if (value == null) {
-            return "";
-        }
-        return value.trim().toLowerCase();
+        return dao.searchAdvanced(keyword, khoaId, nganhId, gioiTinh, trinhDo, chucVu);
     }
 
     public int findIndexById(int id) {
